@@ -1,20 +1,24 @@
 package backend
 
-import scala.scalajs.js
 import org.scalajs.dom
+import com.raquo.laminar.api.L.*
 
-@main def BackEnd(): Unit = 
-    dom.document.querySelector("#app").innerHTML = """
-        <div>
-            <a href="https://vitejs.dev" target="_blank">
-            <img src="/vite.svg" class="logo" alt="Vite logo" />
-            </a>
-            <h1>Hello Vite!!</h1>
-            <div class="card">
-            <button id="counter" type="button"></button>
-            </div>
-            <p class="read-the-docs">
-            Click on the Vite logo to learn more
-            </p>
-        </div>
-    """
+@main def MainPage(): Unit = 
+  val nameVar = Var(initial = "world")
+  val rootElement = div(
+    label("Your name: "),
+    input(
+      onMountFocus,
+      placeholder := "Enter your name here",
+      onInput.mapToValue --> nameVar
+    ),
+    span(
+      "Hello, ",
+      child.text <-- nameVar.signal.map(_.toUpperCase)
+    )
+  )
+
+  // In most other examples, containerNode will be set to this behind the scenes
+  val containerNode = dom.document.querySelector("#app")
+
+  render(containerNode, rootElement)

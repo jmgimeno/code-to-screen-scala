@@ -12,6 +12,7 @@ lazy val backend = project.in(file("backend"))
               )
         },
         libraryDependencies ++= Seq(
-            "org.scala-js" %%% "scalajs-dom" % "2.2.0"
+            "org.scala-js" %%% "scalajs-dom" % "2.2.0",
+            "com.raquo" %%% "laminar" % "0.14.2"
         )
     )
