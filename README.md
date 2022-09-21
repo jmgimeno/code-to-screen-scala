@@ -21,5 +21,8 @@ and the project is served at [http://localhost:5173/](http://localhost:5173/)
 
 ### Added Scala.js
 
-Added `sbt` configuration.
+* Added `sbt` configuration.
 
+* Added `Main.scala` for code in scala.js
+
+* Run `~fastLinkJS` in `sbt` and `npm run dev` on another terminal
