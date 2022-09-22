@@ -1,4 +1,4 @@
-package backend
+package frontend
 
 import org.scalajs.dom
 import com.raquo.laminar.api.L.*

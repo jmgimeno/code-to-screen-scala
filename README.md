@@ -1,6 +1,6 @@
 # code-to-scree
 
-## backend
+## frontend
 
 ### Vite installation
 
@@ -10,7 +10,7 @@ In the root directory:
 npm create vite@latest
 ```
 
-and the project is named `backend`.
+and the project is named `frontend`.
 
 ```shell
 npm install

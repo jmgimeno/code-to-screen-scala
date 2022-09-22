@@ -1,6 +1,6 @@
 import org.scalajs.linker.interface.ModuleSplitStyle
 
-lazy val backend = project.in(file("backend"))
+lazy val frontend = project.in(file("frontend"))
     .enablePlugins(ScalaJSPlugin)
     .settings(
         scalaVersion := "3.2.0",
@@ -8,7 +8,7 @@ lazy val backend = project.in(file("backend"))
         scalaJSLinkerConfig ~= {
             _.withModuleKind(ModuleKind.ESModule)
               .withModuleSplitStyle(
-                ModuleSplitStyle.SmallModulesFor(List("backend"))
+                ModuleSplitStyle.SmallModulesFor(List("frontend"))
               )
         },
         libraryDependencies ++= Seq(
