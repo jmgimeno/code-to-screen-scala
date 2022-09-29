@@ -57,7 +57,7 @@ def renderProgramCode(program: Program) =
     )
   )
 
-def Show =
+val Show =
   div(
     cls := "navbar row",
     ul(
@@ -96,6 +96,7 @@ def Show =
             cls := "nav-item",
             a(
               cls := "nav-link",
+              cls.toggle("disabled") <-- posts.signal.map(_.isEmpty),
               dataAttr("bs-toggle") := "tab",
               href := "#show",
               "Show"
