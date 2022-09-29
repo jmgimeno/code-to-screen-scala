@@ -5,27 +5,33 @@ import com.raquo.laminar.api.L.*
 
 final case class Program(id: Int, code: String)
 
-var posts: List[Program] =
-  List(
-    Program(
-      1,
-      """def main(args: Array[String]): Unit = {
+val posts: Var[List[Program]] =
+  Var(
+    List(
+      Program(
+        1,
+        """def main(args: Array[String]): Unit = {
       | println("Code 1")
       |}""".stripMargin
-    ),
-    Program(
-      2,
-      """def main(args: Array[String]): Unit = {
+      ),
+      Program(
+        2,
+        """def main(args: Array[String]): Unit = {
       | println("Code 2")
       |}""".stripMargin
+      )
     )
   )
 
 def doPost(event: dom.Event): Unit =
   event.preventDefault()
-  dom.window.alert("Called submit !!!")
+  val codeArea = dom.document.getElementById("code").asInstanceOf[dom.html.TextArea]
+  val code = codeArea.value
+  val id = posts.now().size + 1
+  posts.update(_ :+ Program(id, code))
+  codeArea.value = ""
 
-def Post =
+val Post =
   form(
     onSubmit --> doPost,
     label(
@@ -44,37 +50,39 @@ def Post =
     )
   )
 
+def renderProgramTab(program: Program) =
+  li(
+    cls := "nav-item",
+    a(
+      cls := "nav-link",
+      cls.toggle("active") := program.id == 1,
+      dataAttr("bs-toggle") := "tab",
+      href := s"#code${program.id}",
+      s"Code ${program.id}"
+    )
+  )
+
+def renderProgramCode(program: Program) =
+  div(
+    cls := "tab-pane container",
+    cls.toggle("active") := program.id == 1,
+    idAttr := s"code${program.id}",
+    pre(
+      cls := "mt-3",
+      code(cls := "language-scala", program.code)
+    )
+  )
+
 def Show =
   div(
     cls := "navbar row",
     ul(
       cls := "nav navbar-nav flex-column col-md-1 navbar-light m-2",
-      posts.map { program =>
-        li(
-          cls := "nav-item",
-          a(
-            cls := "nav-link",
-            cls.toggle("active") := program.id == 1,
-            dataAttr("bs-toggle") := "tab",
-            href := s"#code${program.id}",
-            s"Code ${program.id}"
-          )
-        )
-      }
+      children <-- posts.signal.map(_.map(renderProgramTab))
     ),
     div(
       cls := "tab-content col-md-11",
-      posts.map { program =>
-        div(
-          cls := "tab-pane container",
-          cls.toggle("active") := program.id == 1,
-          idAttr := s"code${program.id}",
-          pre(
-            cls := "mt-3",
-            code(cls := "language-scala", program.code)
-          )
-        )
-      }
+      children <-- posts.signal.map(_.map(renderProgramCode))
     )
   )
 
