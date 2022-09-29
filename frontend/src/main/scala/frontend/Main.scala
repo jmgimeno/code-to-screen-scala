@@ -3,14 +3,22 @@ package frontend
 import org.scalajs.dom
 import com.raquo.laminar.api.L.*
 
-var posts: List[String] =
+final case class Program(id: Int, code: String)
+
+var posts: List[Program] =
   List(
-    """def main(args: Array[String]): Unit = {
+    Program(
+      1,
+      """def main(args: Array[String]): Unit = {
       | println("Code 1")
-      |}""".stripMargin,
-    """def main(args: Array[String]): Unit = {
+      |}""".stripMargin
+    ),
+    Program(
+      2,
+      """def main(args: Array[String]): Unit = {
       | println("Code 2")
       |}""".stripMargin
+    )
   )
 
 def doPost(event: dom.Event): Unit =
@@ -41,29 +49,29 @@ def Show =
     cls := "navbar row",
     ul(
       cls := "nav navbar-nav flex-column col-md-1 navbar-light m-2",
-      posts.zipWithIndex.map { case (_, index) =>
+      posts.map { program =>
         li(
           cls := "nav-item",
           a(
             cls := "nav-link",
-            cls.toggle("active") := index == 0,
+            cls.toggle("active") := program.id == 1,
             dataAttr("bs-toggle") := "tab",
-            href := s"#code$index",
-            s"Code ${index + 1}"
+            href := s"#code${program.id}",
+            s"Code ${program.id}"
           )
         )
       }
     ),
     div(
       cls := "tab-content col-md-11",
-      posts.zipWithIndex.map { case (post, index) =>
+      posts.map { program =>
         div(
           cls := "tab-pane container",
-          cls.toggle("active") := index == 0,
-          idAttr := s"code$index",
+          cls.toggle("active") := program.id == 1,
+          idAttr := s"code${program.id}",
           pre(
             cls := "mt-3",
-            code(cls := "language-scala", post)
+            code(cls := "language-scala", program.code)
           )
         )
       }
