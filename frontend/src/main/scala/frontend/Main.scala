@@ -16,7 +16,7 @@ def doPost(event: dom.Event): Unit =
   posts.update(_ :+ Program(id, code))
   codeArea.value = ""
 
-val Post =
+def FormTab =
   div(
     cls := "container p-3",
     form(
@@ -64,7 +64,7 @@ def renderProgramCode(id: Int, initialProgram: Program, program: Signal[Program]
     )
   )
 
-val Show =
+def ShowTab =
   div(
     cls := "container",
     div(
@@ -80,16 +80,27 @@ val Show =
     )
   )
 
-@main def MainPage(): Unit =
-  val rootElement =
+def NavBar =
+  nav(
+    cls := "navbar navbar-expand-sm bg-light navbar-light",
     div(
       cls := "container-fluid",
       div(
-        cls := "navbar navbar-expand-sm bg-light navbar-light",
-        div(
-          cls := "navbar-brand text-dark me-3",
-          "Code to Screen"
-        ),
+        cls := "navbar-brand text-dark me-3",
+        "Code to Screen"
+      ),
+      button(
+        cls := "navbar-toggler",
+        typ := "button",
+        dataAttr("bs-toggle") := "collapse",
+        dataAttr("bs-target") := "#navbarNav",
+        span(
+          cls := "navbar-toggler-icon"
+        )
+      ),
+      div(
+        cls := "collapse navbar-collapse",
+        idAttr := "navbarNav",
         ul(
           cls := "nav navbar-nav",
           li(
@@ -121,23 +132,31 @@ val Show =
             img(src := "./GitHub-Mark-32px.png")
           )
         )
-      ),
-      div(
-        cls := "tab-content",
-        div(
-          cls := "tab-pane active",
-          idAttr := "post",
-          Post
-        ),
-        div(
-          cls := "tab-pane fade",
-          idAttr := "show",
-          Show
-        )
       )
     )
+  )
 
-  // In most other examples, containerNode will be set to this behind the scenes
+def Tabs =
+  div(
+    cls := "tab-content",
+    div(
+      cls := "tab-pane active",
+      idAttr := "post",
+      FormTab
+    ),
+    div(
+      cls := "tab-pane fade",
+      idAttr := "show",
+      ShowTab
+    )
+  )
+
+def RootElement =
+  div(
+    NavBar,
+    Tabs
+  )
+
+@main def MainPage(): Unit =
   val containerNode = dom.document.querySelector("#app")
-
-  render(containerNode, rootElement)
+  render(containerNode, RootElement)
