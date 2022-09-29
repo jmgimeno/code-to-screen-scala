@@ -17,21 +17,24 @@ def doPost(event: dom.Event): Unit =
   codeArea.value = ""
 
 val Post =
-  form(
-    onSubmit --> doPost,
-    label(
-      forId := "code",
-      "Enter the code"
-    ),
-    textArea(
-      cls := "form-control",
-      idAttr := "code",
-      rows := 20
-    ),
-    button(
-      typ := "submit",
-      cls := "mt-2 btn btn-secondary",
-      "Submit"
+  div(
+    cls := "container p-3",
+    form(
+      onSubmit --> doPost,
+      label(
+        forId := "code",
+        "Enter the code"
+      ),
+      textArea(
+        cls := "form-control",
+        idAttr := "code",
+        rows := 20
+      ),
+      button(
+        typ := "submit",
+        cls := "mt-2 btn btn-secondary",
+        "Submit"
+      )
     )
   )
 
@@ -63,14 +66,17 @@ def renderProgramCode(id: Int, initialProgram: Program, program: Signal[Program]
 
 val Show =
   div(
-    cls := "navbar row",
-    ul(
-      cls := "nav navbar-nav flex-column col-md-1 navbar-light m-2",
-      children <-- posts.signal.split(_.id)(renderProgramTab)
-    ),
+    cls := "container",
     div(
-      cls := "tab-content col-md-11",
-      children <-- posts.signal.split(_.id)(renderProgramCode)
+      cls := "navbar row",
+      ul(
+        cls := "nav navbar-nav flex-column col-sm-1 navbar-light m-2",
+        children <-- posts.signal.split(_.id)(renderProgramTab)
+      ),
+      div(
+        cls := "tab-content col-sm-10",
+        children <-- posts.signal.split(_.id)(renderProgramCode)
+      )
     )
   )
 
