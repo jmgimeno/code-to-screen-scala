@@ -1,6 +1,7 @@
 package frontend
 
 import org.scalajs.dom
+import scala.scalajs.js
 import com.raquo.laminar.api.L.*
 
 final case class Program(id: Int, code: String)
@@ -53,7 +54,10 @@ def renderProgramCode(program: Program) =
     idAttr := s"code${program.id}",
     pre(
       cls := "mt-3",
-      code(cls := "language-scala", program.code)
+      code(
+        program.code,
+        onMountCallback(ctx => js.Dynamic.global.hljs.highlightElement(ctx.thisNode.ref))
+      )
     )
   )
 
@@ -71,7 +75,6 @@ val Show =
   )
 
 @main def MainPage(): Unit =
-  val nameVar = Var(initial = "world")
   val rootElement =
     div(
       cls := "container-fluid",
