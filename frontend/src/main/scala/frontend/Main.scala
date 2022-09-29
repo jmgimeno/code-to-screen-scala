@@ -8,76 +8,14 @@ final case class Program(id: Int, code: String)
 
 val posts: Var[List[Program]] = Var(List())
 
-def doPost(event: dom.Event): Unit =
-  event.preventDefault()
-  val codeArea = dom.document.getElementById("code").asInstanceOf[dom.html.TextArea]
-  val code = codeArea.value
-  val id = posts.now().size + 1
-  posts.update(_ :+ Program(id, code))
-  codeArea.value = ""
+@main def MainPage(): Unit =
+  val containerNode = dom.document.querySelector("#app")
+  render(containerNode, RootElement)
 
-def FormTab =
+def RootElement =
   div(
-    cls := "container p-3",
-    form(
-      onSubmit --> doPost,
-      label(
-        forId := "code",
-        "Enter the code"
-      ),
-      textArea(
-        cls := "form-control",
-        idAttr := "code",
-        rows := 20
-      ),
-      button(
-        typ := "submit",
-        cls := "mt-2 btn btn-secondary",
-        "Submit"
-      )
-    )
-  )
-
-def renderProgramTab(id: Int, initialProgram: Program, program: Signal[Program]) =
-  li(
-    cls := "nav-item",
-    a(
-      cls := "nav-link",
-      cls.toggle("active") <-- program.map(_.id == 1),
-      dataAttr("bs-toggle") := "tab",
-      href := s"#code${id}",
-      s"Code ${id}"
-    )
-  )
-
-def renderProgramCode(id: Int, initialProgram: Program, program: Signal[Program]) =
-  div(
-    cls := "tab-pane container",
-    cls.toggle("active") <-- program.map(_.id == 1),
-    idAttr := s"code${id}",
-    pre(
-      cls := "mt-3",
-      code(
-        child <-- program.map(_.code),
-        onMountCallback(ctx => js.Dynamic.global.hljs.highlightElement(ctx.thisNode.ref))
-      )
-    )
-  )
-
-def ShowTab =
-  div(
-    cls := "container",
-    div(
-      cls := "navbar row",
-      ul(
-        cls := "nav navbar-nav flex-column col-sm-1 navbar-light m-2",
-        children <-- posts.signal.split(_.id)(renderProgramTab)
-      ),
-      div(
-        cls := "tab-content col-sm-10",
-        children <-- posts.signal.split(_.id)(renderProgramCode)
-      )
-    )
+    NavBar,
+    Tabs
   )
 
 def NavBar =
@@ -151,12 +89,74 @@ def Tabs =
     )
   )
 
-def RootElement =
+def FormTab =
   div(
-    NavBar,
-    Tabs
+    cls := "container p-3",
+    form(
+      onSubmit --> doPost,
+      label(
+        forId := "code",
+        "Enter the code"
+      ),
+      textArea(
+        cls := "form-control",
+        idAttr := "code",
+        rows := 20
+      ),
+      button(
+        typ := "submit",
+        cls := "mt-2 btn btn-secondary",
+        "Submit"
+      )
+    )
   )
 
-@main def MainPage(): Unit =
-  val containerNode = dom.document.querySelector("#app")
-  render(containerNode, RootElement)
+def doPost(event: dom.Event): Unit =
+  event.preventDefault()
+  val codeArea = dom.document.getElementById("code").asInstanceOf[dom.html.TextArea]
+  val code = codeArea.value
+  val id = posts.now().size + 1
+  posts.update(_ :+ Program(id, code))
+  codeArea.value = ""
+
+def ShowTab =
+  div(
+    cls := "container",
+    div(
+      cls := "navbar row",
+      ul(
+        cls := "nav navbar-nav flex-column col-sm-1 navbar-light m-2",
+        children <-- posts.signal.split(_.id)(renderProgramTab)
+      ),
+      div(
+        cls := "tab-content col-sm-10",
+        children <-- posts.signal.split(_.id)(renderProgramCode)
+      )
+    )
+  )
+
+def renderProgramTab(id: Int, initialProgram: Program, program: Signal[Program]) =
+  li(
+    cls := "nav-item",
+    a(
+      cls := "nav-link",
+      cls.toggle("active") := initialProgram.id == 1,
+      dataAttr("bs-toggle") := "tab",
+      href := s"#code${id}",
+      s"Code ${id}"
+    )
+  )
+
+def renderProgramCode(id: Int, initialProgram: Program, program: Signal[Program]) =
+  div(
+    cls := "tab-pane container",
+    cls.toggle("active") := initialProgram.id == 1,
+    idAttr := s"code${id}",
+    pre(
+      cls := "mt-3",
+      code(
+        initialProgram.code,
+        onMountCallback(ctx => js.Dynamic.global.hljs.highlightElement(ctx.thisNode.ref))
+      )
+    )
+  )
