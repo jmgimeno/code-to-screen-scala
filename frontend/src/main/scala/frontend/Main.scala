@@ -26,8 +26,58 @@ def Post =
   )
 
 def Show =
-  p(
-    "Show"
+  div(
+    cls := "navbar row",
+    ul(
+      cls := "nav navbar-nav flex-column col-md-1 navbar-light m-2",
+      li(
+        cls := "nav-item",
+        a(
+          cls := "nav-link active",
+          dataAttr("bs-toggle") := "tab",
+          href := "#code1",
+          "Code 1"
+        )
+      ),
+      li(
+        cls := "nav-item",
+        a(
+          cls := "nav-link ",
+          dataAttr("bs-toggle") := "tab",
+          href := "#code2",
+          "Code 2"
+        )
+      )
+    ),
+    div(
+      cls := "tab-content col-md-11",
+      div(
+        cls := "tab-pane container active",
+        idAttr := "code1",
+        pre(
+          cls := "mt-3",
+          code(
+            cls := "language-scala",
+            "def main(args: Array[String]): Unit = {",
+            "  println(\"Code 1\")",
+            "}"
+          )
+        )
+      ),
+      div(
+        cls := "tab-pane container fade",
+        idAttr := "code2",
+        pre(
+          cls := "mt-3",
+          code(
+            cls := "language-scala",
+            "def main(args: Array[String]): Unit = {",
+            "  println(\"Code 2\")",
+            "}"
+          )
+        )
+      )
+    )
   )
 
 @main def MainPage(): Unit =
@@ -46,8 +96,7 @@ def Show =
           li(
             cls := "nav-item",
             a(
-              href := "#",
-              cls := "nav-link active ",
+              cls := "nav-link active",
               dataAttr("bs-toggle") := "tab",
               href := "#post",
               "Post"
@@ -56,7 +105,6 @@ def Show =
           li(
             cls := "nav-item",
             a(
-              href := "#",
               cls := "nav-link",
               dataAttr("bs-toggle") := "tab",
               href := "#show",
