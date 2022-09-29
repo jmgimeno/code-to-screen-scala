@@ -85,9 +85,9 @@ val Show =
     div(
       cls := "container-fluid",
       div(
-        cls := "navbar navbar-expand-md bg-light navbar-light",
+        cls := "navbar navbar-expand-sm bg-light navbar-light",
         div(
-          cls := "navbar-brand text-dark",
+          cls := "navbar-brand text-dark me-3",
           "Code to Screen"
         ),
         ul(
