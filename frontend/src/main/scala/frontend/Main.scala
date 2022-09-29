@@ -6,24 +6,61 @@ import com.raquo.laminar.api.L.*
 @main def MainPage(): Unit =
   val nameVar = Var(initial = "world")
   val rootElement =
-    nav(
-      cls := "navbar navbar-expand-md fixed-top bg-light",
+    div(
+      cls := "container-fluid",
       div(
-        cls := "container-fluid",
-        a(href := "#", cls := "navbar-brand", "Code to Screen"),
+        cls := "navbar navbar-expand-md bg-light navbar-light",
         div(
-          cls := "collapse navbar-collapse d-flex justify-content-between",
-          idAttr := "navbarCollapse",
-          ul(
-            cls := "navbar-nav",
-            li(cls := "nav-item", a(href := "#", cls := "nav-link active", "Post")),
-            li(cls := "nav-item", a(href := "#", cls := "nav-link", "Show"))
+          cls := "navbar-brand text-dark",
+          "Code to Screen"
+        ),
+        ul(
+          cls := "nav navbar-nav",
+          li(
+            cls := "nav-item",
+            a(
+              href := "#",
+              cls := "nav-link active ",
+              dataAttr("bs-toggle") := "tab",
+              href := "#post",
+              "Post"
+            )
           ),
+          li(
+            cls := "nav-item",
+            a(
+              href := "#",
+              cls := "nav-link",
+              dataAttr("bs-toggle") := "tab",
+              href := "#show",
+              "Show"
+            )
+          )
+        ),
+        div(
+          cls := "navbar-nav ms-auto",
           a(
             href := "http://github.com",
             target := "_blank",
             cls := "d-none d-md-block d-lg-block d-xl-block d-xxl-block",
             img(src := "./GitHub-Mark-32px.png")
+          )
+        )
+      ),
+      div(
+        cls := "tab-content",
+        div(
+          cls := "tab-pane active",
+          idAttr := "post",
+          p(
+            "Post"
+          )
+        ),
+        div(
+          cls := "tab-pane fade",
+          idAttr := "show",
+          p(
+            "Show"
           )
         )
       )
