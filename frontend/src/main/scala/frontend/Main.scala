@@ -3,12 +3,23 @@ package frontend
 import org.scalajs.dom
 import com.raquo.laminar.api.L.*
 
+var posts: List[String] =
+  List(
+    """def main(args: Array[String]): Unit = {
+      | println("Code 1")
+      |}""".stripMargin,
+    """def main(args: Array[String]): Unit = {
+      | println("Code 2")
+      |}""".stripMargin
+  )
+
+def doPost(event: dom.Event): Unit =
+  event.preventDefault()
+  dom.window.alert("Called submit !!!")
+
 def Post =
   form(
-    onSubmit --> { event =>
-      event.preventDefault()
-      dom.window.alert("Submitted")
-    },
+    onSubmit --> doPost,
     label(
       forId := "code",
       "Enter the code"
@@ -30,53 +41,32 @@ def Show =
     cls := "navbar row",
     ul(
       cls := "nav navbar-nav flex-column col-md-1 navbar-light m-2",
-      li(
-        cls := "nav-item",
-        a(
-          cls := "nav-link active",
-          dataAttr("bs-toggle") := "tab",
-          href := "#code1",
-          "Code 1"
+      posts.zipWithIndex.map { case (_, index) =>
+        li(
+          cls := "nav-item",
+          a(
+            cls := "nav-link",
+            cls.toggle("active") := index == 0,
+            dataAttr("bs-toggle") := "tab",
+            href := s"#code$index",
+            s"Code ${index + 1}"
+          )
         )
-      ),
-      li(
-        cls := "nav-item",
-        a(
-          cls := "nav-link ",
-          dataAttr("bs-toggle") := "tab",
-          href := "#code2",
-          "Code 2"
-        )
-      )
+      }
     ),
     div(
       cls := "tab-content col-md-11",
-      div(
-        cls := "tab-pane container active",
-        idAttr := "code1",
-        pre(
-          cls := "mt-3",
-          code(
-            cls := "language-scala",
-            "def main(args: Array[String]): Unit = {",
-            "  println(\"Code 1\")",
-            "}"
+      posts.zipWithIndex.map { case (post, index) =>
+        div(
+          cls := "tab-pane container",
+          cls.toggle("active") := index == 0,
+          idAttr := s"code$index",
+          pre(
+            cls := "mt-3",
+            code(cls := "language-scala", post)
           )
         )
-      ),
-      div(
-        cls := "tab-pane container fade",
-        idAttr := "code2",
-        pre(
-          cls := "mt-3",
-          code(
-            cls := "language-scala",
-            "def main(args: Array[String]): Unit = {",
-            "  println(\"Code 2\")",
-            "}"
-          )
-        )
-      )
+      }
     )
   )
 
