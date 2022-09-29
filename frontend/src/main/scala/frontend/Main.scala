@@ -5,23 +5,7 @@ import com.raquo.laminar.api.L.*
 
 final case class Program(id: Int, code: String)
 
-val posts: Var[List[Program]] =
-  Var(
-    List(
-      Program(
-        1,
-        """def main(args: Array[String]): Unit = {
-      | println("Code 1")
-      |}""".stripMargin
-      ),
-      Program(
-        2,
-        """def main(args: Array[String]): Unit = {
-      | println("Code 2")
-      |}""".stripMargin
-      )
-    )
-  )
+val posts: Var[List[Program]] = Var(List())
 
 def doPost(event: dom.Event): Unit =
   event.preventDefault()
