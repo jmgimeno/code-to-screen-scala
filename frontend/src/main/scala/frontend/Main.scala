@@ -35,27 +35,27 @@ val Post =
     )
   )
 
-def renderProgramTab(program: Program) =
+def renderProgramTab(id: Int, initialProgram: Program, program: Signal[Program]) =
   li(
     cls := "nav-item",
     a(
       cls := "nav-link",
-      cls.toggle("active") := program.id == 1,
+      cls.toggle("active") <-- program.map(_.id == 1),
       dataAttr("bs-toggle") := "tab",
-      href := s"#code${program.id}",
-      s"Code ${program.id}"
+      href := s"#code${id}",
+      s"Code ${id}"
     )
   )
 
-def renderProgramCode(program: Program) =
+def renderProgramCode(id: Int, initialProgram: Program, program: Signal[Program]) =
   div(
     cls := "tab-pane container",
-    cls.toggle("active") := program.id == 1,
-    idAttr := s"code${program.id}",
+    cls.toggle("active") <-- program.map(_.id == 1),
+    idAttr := s"code${id}",
     pre(
       cls := "mt-3",
       code(
-        program.code,
+        child <-- program.map(_.code),
         onMountCallback(ctx => js.Dynamic.global.hljs.highlightElement(ctx.thisNode.ref))
       )
     )
@@ -66,11 +66,11 @@ val Show =
     cls := "navbar row",
     ul(
       cls := "nav navbar-nav flex-column col-md-1 navbar-light m-2",
-      children <-- posts.signal.map(_.map(renderProgramTab))
+      children <-- posts.signal.split(_.id)(renderProgramTab)
     ),
     div(
       cls := "tab-content col-md-11",
-      children <-- posts.signal.map(_.map(renderProgramCode))
+      children <-- posts.signal.split(_.id)(renderProgramCode)
     )
   )
 
