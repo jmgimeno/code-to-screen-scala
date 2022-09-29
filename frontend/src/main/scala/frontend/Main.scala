@@ -3,6 +3,33 @@ package frontend
 import org.scalajs.dom
 import com.raquo.laminar.api.L.*
 
+def Post =
+  form(
+    onSubmit --> { event =>
+      event.preventDefault()
+      dom.window.alert("Submitted")
+    },
+    label(
+      forId := "code",
+      "Enter the code"
+    ),
+    textArea(
+      cls := "form-control",
+      idAttr := "code",
+      rows := 20
+    ),
+    button(
+      typ := "submit",
+      cls := "mt-2 btn btn-secondary",
+      "Submit"
+    )
+  )
+
+def Show =
+  p(
+    "Show"
+  )
+
 @main def MainPage(): Unit =
   val nameVar = Var(initial = "world")
   val rootElement =
@@ -52,16 +79,12 @@ import com.raquo.laminar.api.L.*
         div(
           cls := "tab-pane active",
           idAttr := "post",
-          p(
-            "Post"
-          )
+          Post
         ),
         div(
           cls := "tab-pane fade",
           idAttr := "show",
-          p(
-            "Show"
-          )
+          Show
         )
       )
     )
