@@ -34,3 +34,15 @@ and the project is served at [http://localhost:5173/](http://localhost:5173/)
 * Changed `Main.scala` to use laminar
 
   * It seems that _something_ needs a `@main` entrypoint because leaving the code at top-level does not compile.
+
+## backend
+
+* Added configuration in `build.sbt`
+
+* Minimal "test" on browser console (in many tabs) by:
+
+```javascript
+let ws = new WebSocket('ws://localhost:8080/subscribe')
+ws.onmessage = function(e) { console.log(e) }
+ws.send("potato")
+```
