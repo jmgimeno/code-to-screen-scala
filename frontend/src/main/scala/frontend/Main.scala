@@ -3,10 +3,17 @@ package frontend
 import org.scalajs.dom
 import scala.scalajs.js
 import com.raquo.laminar.api.L.*
+import io.laminext.websocket.*
+import com.raquo.airstream.core.Observer
 
 final case class Program(id: Int, code: String)
 
 val posts: Var[List[Program]] = Var(List())
+
+val addPost: Observer[String] =
+  posts.updater[String]((posts, post) => posts :+ Program(posts.length + 1, post))
+
+val ws: WebSocket[String, String] = WebSocket.path("/subscribe").string.build(managed = true)
 
 @main def MainPage(): Unit =
   val containerNode = dom.document.querySelector("#app")
@@ -14,6 +21,8 @@ val posts: Var[List[Program]] = Var(List())
 
 def RootElement =
   div(
+    ws.connect,
+    ws.received --> addPost,
     NavBar,
     Tabs
   )
@@ -115,8 +124,9 @@ def doPost(event: dom.Event): Unit =
   event.preventDefault()
   val codeArea = dom.document.getElementById("code").asInstanceOf[dom.html.TextArea]
   val code = codeArea.value
-  val id = posts.now().size + 1
-  posts.update(_ :+ Program(id, code))
+  // val id = posts.now().size + 1
+  // posts.update(_ :+ Program(id, code))
+  ws.sendOne(code)
   codeArea.value = ""
 
 def ShowTab =

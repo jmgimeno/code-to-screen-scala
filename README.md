@@ -46,3 +46,15 @@ let ws = new WebSocket('ws://localhost:8080/subscribe')
 ws.onmessage = function(e) { console.log(e) }
 ws.send("potato")
 ```
+
+## modified frontend to use websockets
+
+* Added dependency on 'laminext'
+
+* Added proxy in `vite.config.js' for the websocket endpoint on the server
+
+* To run in development mode
+
+  * `sbt` on `backend` project `run`
+  * `sbt` on `frontend` project `fastLinkJS`
+  * on `frontend` folder `npm run dev`
