@@ -84,3 +84,9 @@ ws.send("potato")
 * on `sbt` run `backend/assembly` and the `uberjar` file is at `backend/target/scala-3.2.0/code-to-screen-standalone.jar`
 
 * you can run in by `java -jar code-to-screen-standalone.jar`
+
+### added Dockerfile
+
+* run `docker build -t code-to-screen-scala .` to build an image
+
+* `docker run --detach --publish 8000:8080 --name code-to-screen-1 code-to-screen-scala`
