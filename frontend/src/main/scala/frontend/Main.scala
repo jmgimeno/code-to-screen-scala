@@ -1,19 +1,18 @@
 package frontend
 
+import com.raquo.laminar.api.L.*
+import io.laminext.websocket.WebSocket
 import org.scalajs.dom
 import scala.scalajs.js
-import com.raquo.laminar.api.L.*
-import io.laminext.websocket.*
-import com.raquo.airstream.core.Observer
 
 final case class Program(id: Int, code: String)
 
-val posts: Var[List[Program]] = Var(List())
-
-val addPost: Observer[String] =
-  posts.updater[String]((posts, post) => posts :+ Program(posts.length + 1, post))
-
 val ws: WebSocket[String, String] = WebSocket.path("/subscribe").string.build(managed = true)
+
+val programs: Signal[List[Program]] =
+  ws.received.foldLeft(List.empty)((programs, code) =>
+    programs :+ Program(programs.length + 1, code)
+  )
 
 @main def MainPage(): Unit =
   val containerNode = dom.document.querySelector("#app")
@@ -22,7 +21,6 @@ val ws: WebSocket[String, String] = WebSocket.path("/subscribe").string.build(ma
 def RootElement =
   div(
     ws.connect,
-    ws.received --> addPost,
     NavBar,
     Tabs
   )
@@ -63,7 +61,7 @@ def NavBar =
             cls := "nav-item",
             a(
               cls := "nav-link",
-              cls.toggle("disabled") <-- posts.signal.map(_.isEmpty),
+              cls.toggle("disabled") <-- programs.map(_.isEmpty),
               dataAttr("bs-toggle") := "tab",
               href := "#show",
               "Show"
@@ -124,8 +122,6 @@ def doPost(event: dom.Event): Unit =
   event.preventDefault()
   val codeArea = dom.document.getElementById("code").asInstanceOf[dom.html.TextArea]
   val code = codeArea.value
-  // val id = posts.now().size + 1
-  // posts.update(_ :+ Program(id, code))
   ws.sendOne(code)
   codeArea.value = ""
 
@@ -136,11 +132,11 @@ def ShowTab =
       cls := "navbar row",
       ul(
         cls := "nav navbar-nav flex-column col-sm-1 navbar-light m-2",
-        children <-- posts.signal.split(_.id)(renderProgramTab)
+        children <-- programs.split(_.id)(renderProgramTab)
       ),
       div(
         cls := "tab-content col-sm-10",
-        children <-- posts.signal.split(_.id)(renderProgramCode)
+        children <-- programs.split(_.id)(renderProgramCode)
       )
     )
   )
