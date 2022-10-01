@@ -25,8 +25,13 @@ object Main extends ZIOAppDefault:
     }
 
   val app: Http[Connections, Nothing, Request, Response] =
-    Http.collectZIO[Request] { case Method.GET -> !! / "subscribe" =>
-      ws.toSocketApp.toResponse
+    Http.collectHttp[Request] {
+      case Method.GET -> !! / "subscribe" =>
+        ws.toSocketApp.toHttp
+      case Method.GET -> !! / file =>
+        Http.fromResource(s"public/$file").orElse(Http.notFound)
+      case Method.GET -> !! =>
+        Response.redirect("/index.html").toHttp
     }
 
   val run =

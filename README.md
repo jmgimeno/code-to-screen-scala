@@ -68,3 +68,13 @@ ws.send("potato")
   * on `sbt` run `backend/reStart` (or `~backend/reStart` to triggered restarting the app with changes)
 
   * you also have `reStop` and `reStatus`
+
+## production version
+
+* on `sbt` run `frontend/fullLinkJS`
+
+* copy `index.html` and `frontend/target/scala-3.2.0/frontend-opt/main.js` to `backend/src/main/resources/public`
+
+* on `sbt` rub `frontend/reStart`
+
+* open `http://localhost:8080`
