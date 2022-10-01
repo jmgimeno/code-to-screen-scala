@@ -37,6 +37,8 @@ object Main extends ZIOAppDefault:
     }
 
   val run =
-    Server
-      .start(8080, app)
-      .provide(ZLayer.fromZIO(Ref.make(Set.empty[WebSocketChannel])))
+    (for
+      port <- System.envOrElse("PORT", "8080").map(_.toInt)
+      _ <- Console.printLine(s"Starting server on port $port")
+      _ <- Server.start(port, app)
+    yield ()).provide(ZLayer.fromZIO(Ref.make(Set.empty[WebSocketChannel])))
