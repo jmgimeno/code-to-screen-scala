@@ -55,6 +55,16 @@ ws.send("potato")
 
 * To run in development mode
 
-  * `sbt` on `backend` project `run`
-  * `sbt` on `frontend` project `fastLinkJS`
-  * on `frontend` folder `npm run dev`
+  * on `sbt` run `backend/run`
+  * on `sbt` run `frontend/fastLinkJS`
+  * in `frontend` folder `npm run dev`
+
+## added `sbt-revolver`
+
+* Added the plug-in to sbt configuration
+
+* Now to start the 'backend`:
+
+  * on `sbt` run `backend/reStart` (or `~backend/reStart` to triggered restarting the app with changes)
+
+  * you also have `reStop` and `reStatus`
