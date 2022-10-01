@@ -1,3 +1,5 @@
+package backend
+
 import zio.*
 import zhttp.http.*
 import zhttp.service.*

@@ -78,3 +78,9 @@ ws.send("potato")
 * on `sbt` rub `frontend/reStart`
 
 * open `http://localhost:8080`
+
+### added `sbt-assembly` for creating `uberjar`
+
+* on `sbt` run `backend/assembly` and the `uberjar` file is at `backend/target/scala-3.2.0/code-to-screen-standalone.jar`
+
+* you can run in by `java -jar code-to-screen-standalone.jar`

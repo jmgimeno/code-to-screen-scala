@@ -18,6 +18,14 @@ lazy val frontend = project
 lazy val backend = project
   .in(file("backend"))
   .settings(
+    assembly / assemblyJarName := "code-to-screen-standalone.jar",
+    assembly / mainClass := Some("backend.Main"),
+    assembly / assemblyMergeStrategy := {
+      case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.first
+      case x =>
+        val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
+        oldStrategy(x)
+    },
     libraryDependencies ++= Seq(
       "dev.zio" %% "zio" % "2.0.1",
       "io.d11" %% "zhttp" % "2.0.0-RC11"
@@ -26,4 +34,7 @@ lazy val backend = project
 
 lazy val root = project
   .in(file("."))
+  .settings(
+    name := "code-to-screen"
+  )
   .aggregate(frontend, backend)
