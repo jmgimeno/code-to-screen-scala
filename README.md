@@ -73,7 +73,7 @@ ws.send("potato")
 
 * on `sbt` run `frontend/fullLinkJS`
 
-* copy `index.html` and `frontend/target/scala-3.2.0/frontend-opt/main.js` to `backend/src/main/resources/public`
+* copy `frontend/index.html` and `frontend/target/scala-3.2.0/frontend-opt/main.js` and `frontend/public/*` to `backend/src/main/resources/public`
 
 * on `sbt` rub `frontend/reStart`
 

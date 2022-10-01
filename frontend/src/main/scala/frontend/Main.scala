@@ -71,7 +71,7 @@ def NavBar =
         div(
           cls := "navbar-nav ms-auto",
           a(
-            href := "http://github.com",
+            href := "http://github.com/jmgimeno/code-to-screen-scala",
             target := "_blank",
             cls := "d-none d-md-block d-lg-block d-xl-block d-xxl-block",
             img(src := "./GitHub-Mark-32px.png")

@@ -59,5 +59,4 @@ coursier
 index.scip
 
 # backend/resources copied from frontend
-backend/src/main/resources/public/index.html
-backend/src/main/resources/public/main.js
+backend/src/main/resources/public/*
