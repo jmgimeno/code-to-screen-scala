@@ -129,7 +129,7 @@ def ShowTab =
   div(
     cls := "container",
     div(
-      cls := "navbar row",
+      cls := "navbar row align-items-start",
       ul(
         cls := "nav navbar-nav flex-column col-sm-1 navbar-light m-2",
         children <-- programs.split(_.id)(renderProgramTab)
