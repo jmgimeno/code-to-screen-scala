@@ -1,3 +1,5 @@
+import org.scalajs.linker.interface.ModuleSplitStyle
+
 ThisBuild / scalaVersion := "3.2.0"
 
 lazy val frontend = project
@@ -5,11 +7,16 @@ lazy val frontend = project
   .enablePlugins(ScalaJSPlugin)
   .settings(
     scalaJSUseMainModuleInitializer := true,
-    fastLinkJS / scalaJSLinkerConfig ~= {
-      _.withModuleKind(ModuleKind.ESModule).withSourceMap(false)
+    Compile / fastLinkJS / scalaJSLinkerConfig ~= {
+      _.withModuleKind(ModuleKind.ESModule)
+        .withSourceMap(false)
+        .withModuleSplitStyle(
+          ModuleSplitStyle.SmallModulesFor(List("frontend"))
+        )
     },
-    fullOptJS / scalaJSLinkerConfig ~= {
-      _.withModuleKind(ModuleKind.CommonJSModule).withSourceMap(false)
+    Compile / fullOptJS / scalaJSLinkerConfig ~= {
+      _.withModuleKind(ModuleKind.CommonJSModule)
+        .withSourceMap(false)
     },
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "2.2.0",
