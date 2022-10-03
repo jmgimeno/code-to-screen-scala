@@ -5,8 +5,11 @@ lazy val frontend = project
   .enablePlugins(ScalaJSPlugin)
   .settings(
     scalaJSUseMainModuleInitializer := true,
-    scalaJSLinkerConfig ~= {
+    fastLinkJS / scalaJSLinkerConfig ~= {
       _.withModuleKind(ModuleKind.ESModule).withSourceMap(false)
+    },
+    fullOptJS / scalaJSLinkerConfig ~= {
+      _.withModuleKind(ModuleKind.CommonJSModule).withSourceMap(false)
     },
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "2.2.0",
