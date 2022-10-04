@@ -3,7 +3,6 @@ package frontend
 import com.raquo.laminar.api.L.*
 import io.laminext.websocket.WebSocket
 import org.scalajs.dom
-import scala.scalajs.js
 
 final case class Program(id: Int, code: String)
 
@@ -162,7 +161,7 @@ def renderProgramCode(id: Int, initialProgram: Program, program: Signal[Program]
       cls := "mt-3",
       code(
         initialProgram.code,
-        onMountCallback(ctx => js.Dynamic.global.hljs.highlightElement(ctx.thisNode.ref))
+        onMountCallback(ctx => hljs.highlightElement(ctx.thisNode.ref))
       )
     )
   )
