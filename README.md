@@ -1,4 +1,4 @@
-# code-to-scree
+# code-to-screen
 
 ## frontend
 
