@@ -44,4 +44,7 @@ object Main extends ZIOAppDefault:
   val run: ZIO[Any, Nothing, Nothing] =
     Server
       .serve(app.withDefaultErrorResponse)
-      .provide(ZLayer.fromZIO(Ref.make(Set.empty[WebSocketChannel])), Server.default.orDie)
+      .provide(
+        ZLayer.fromZIO(Ref.make(Set.empty[WebSocketChannel])),
+        Server.defaultWithPort(8080).orDie
+      )
