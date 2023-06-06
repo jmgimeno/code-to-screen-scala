@@ -25,7 +25,7 @@ def RootElement =
   )
 
 def NavBar =
-  nav(
+  navTag(
     cls := "navbar navbar-expand-sm bg-light navbar-light",
     div(
       cls := "container-fluid",
