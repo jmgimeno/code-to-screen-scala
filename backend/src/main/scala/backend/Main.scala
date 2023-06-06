@@ -2,10 +2,8 @@ package backend
 
 import zio.*
 import zio.http.*
-import zio.http.ChannelEvent.UserEventTriggered
-import zio.http.ChannelEvent.UserEvent
-import zio.http.ChannelEvent.Read
-import io.netty.util.internal.ThrowableUtil
+import zio.http.ChannelEvent.{Read, UserEvent, UserEventTriggered}
+import zio.stream.*
 
 object Main extends ZIOAppDefault:
 
@@ -31,15 +29,21 @@ object Main extends ZIOAppDefault:
       }
     }
 
-  val app: RHttpApp[Connections] =
-    Http.collectZIO[Request] {
-      case Method.GET -> Root / "subscribe" =>
-        ws.toResponse
-      case Method.GET -> Root / file =>
-        Handler.getResource(s"public/$file").toResponse
-      case Method.GET -> Root =>
-        ZIO.fromEither(URL.decode("/index.html")).map(Response.redirect(_))
+  val socketApp: Http[Connections, Nothing, Request, Response] =
+    Http.collectZIO[Request] { case Method.GET -> Root / "subscribe" =>
+      ws.toResponse
     }
+
+  val filesApp: Http[Any, Throwable, Request, Response] =
+    Http.collectHttp[Request] {
+      case Method.GET -> Root / file =>
+        Http.fromResource(s"public/$file")
+      case Method.GET -> Root =>
+        Http.fromResource("public/index.html")
+
+    }
+
+  val app: Http[Connections, Throwable, Request, Response] = socketApp ++ filesApp
 
   val run: ZIO[Any, Nothing, Nothing] =
     Server
