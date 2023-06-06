@@ -1,44 +1,47 @@
 package backend
 
 import zio.*
-import zhttp.http.*
-import zhttp.service.*
-import zhttp.service.ChannelEvent.*
-import zhttp.socket.*
+import zio.http.*
+import zio.http.ChannelEvent.UserEventTriggered
+import zio.http.ChannelEvent.UserEvent
+import zio.http.ChannelEvent.Read
+import io.netty.util.internal.ThrowableUtil
 
 object Main extends ZIOAppDefault:
 
   type Connections = Ref[Set[WebSocketChannel]]
 
-  val ws: Http[Connections, Nothing, WebSocketChannelEvent, Unit] =
-    Http.fromZIO(ZIO.service[Connections]).flatMap { connections =>
-      Http.collectZIO[WebSocketChannelEvent] {
-        case ChannelEvent(ch, UserEventTriggered(UserEvent.HandshakeComplete)) =>
-          connections.update(_ + ch)
-        case ChannelEvent(ch, ChannelRead(WebSocketFrame.Close(_, _))) =>
-          connections.update(_ - ch)
-        case ChannelEvent(ch, ChannelRead(WebSocketFrame.Text(code))) =>
-          connections.get.flatMap { channels =>
-            ZIO.foreachDiscard(channels)(ch =>
-              ch.writeAndFlush(WebSocketFrame.Text(code)).orElse(connections.update(_ - ch))
-            )
-          }
+  val ws: SocketApp[Connections] =
+    Handler.fromZIO(ZIO.service[Connections]).flatMap { connections =>
+      Handler.webSocket { channel =>
+        channel.receiveAll {
+          case UserEventTriggered(UserEvent.HandshakeComplete) =>
+            connections.update(_ + channel)
+          case Read(WebSocketFrame.Close(_, _)) =>
+            connections.update(_ - channel)
+          case Read(WebSocketFrame.Text(code)) =>
+            connections.get.flatMap { channels =>
+              ZIO.foreachDiscard(channels) { ch =>
+                ch.send(Read(WebSocketFrame.Text(code)))
+                  .orElse(connections.update(_ - ch))
+              }
+            }
+          case _ => ZIO.unit
+        }
       }
     }
 
-  val app: Http[Connections, Nothing, Request, Response] =
-    Http.collectHttp[Request] {
-      case Method.GET -> !! / "subscribe" =>
-        ws.toSocketApp.toHttp
-      case Method.GET -> !! / file =>
-        Http.fromResource(s"public/$file").orElse(Http.notFound)
-      case Method.GET -> !! =>
-        Response.redirect("/index.html").toHttp
+  val app: RHttpApp[Connections] =
+    Http.collectZIO[Request] {
+      case Method.GET -> Root / "subscribe" =>
+        ws.toResponse
+      case Method.GET -> Root / file =>
+        Handler.getResource(s"public/$file").toResponse
+      case Method.GET -> Root =>
+        ZIO.fromEither(URL.decode("/index.html")).map(Response.redirect(_))
     }
 
-  val run =
-    (for
-      port <- System.envOrElse("PORT", "8080").map(_.toInt)
-      _ <- Console.printLine(s"Starting server on port $port")
-      _ <- Server.start(port, app)
-    yield ()).provide(ZLayer.fromZIO(Ref.make(Set.empty[WebSocketChannel])))
+  val run: ZIO[Any, Nothing, Nothing] =
+    Server
+      .serve(app.withDefaultErrorResponse)
+      .provide(ZLayer.fromZIO(Ref.make(Set.empty[WebSocketChannel])), Server.default.orDie)

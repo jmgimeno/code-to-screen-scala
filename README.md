@@ -65,7 +65,7 @@ ws.send("potato")
 
 * Now to start the 'backend`:
 
-  * on `sbt` run `backend/reStart` (or `~backend/reStart` to triggered restarting the app with changes)
+  * on `sbt` run `backend/reStart` (or `~backend/reStart` to trigger restarting the app with changes)
 
   * you also have `reStop` and `reStatus`
 
@@ -73,15 +73,15 @@ ws.send("potato")
 
 * on `sbt` run `frontend/fullLinkJS`
 
-* copy `frontend/index.html` and `frontend/target/scala-3.2.0/frontend-opt/main.js` and `frontend/public/*` to `backend/src/main/resources/public`
+* copy `frontend/index.html` and `frontend/target/scala-3.3.0/frontend-opt/main.js` and `frontend/public/*` to `backend/src/main/resources/public`
 
-* on `sbt` rub `frontend/reStart`
+* on `sbt` rub `backend/reStart`
 
 * open `http://localhost:8080`
 
 ### added `sbt-assembly` for creating `uberjar`
 
-* on `sbt` run `backend/assembly` and the `uberjar` file is at `backend/target/scala-3.2.0/code-to-screen-standalone.jar`
+* on `sbt` run `backend/assembly` and the `uberjar` file is at `backend/target/scala-3.3.0/code-to-screen-standalone.jar`
 
 * you can run in by `java -jar code-to-screen-standalone.jar`
 

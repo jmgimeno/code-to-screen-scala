@@ -37,8 +37,8 @@ lazy val backend = project
         oldStrategy(x)
     },
     libraryDependencies ++= Seq(
-      "dev.zio" %% "zio" % "2.0.1",
-      "io.d11" %% "zhttp" % "2.0.0-RC11"
+      "dev.zio" %% "zio" % "2.0.15",
+      "dev.zio" %% "zio-http" % "3.0.0-RC2"
     )
   )
 
