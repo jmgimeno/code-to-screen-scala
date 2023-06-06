@@ -19,7 +19,7 @@ lazy val frontend = project
         .withSourceMap(false)
     },
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "2.2.0",
+      "org.scala-js" %%% "scalajs-dom" % "2.6.0",
       "com.raquo" %%% "laminar" % "15.0.1",
       "io.laminext" %%% "websocket" % "0.15.0"
     )
