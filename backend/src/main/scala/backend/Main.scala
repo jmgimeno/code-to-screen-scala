@@ -3,7 +3,6 @@ package backend
 import zio.*
 import zio.http.*
 import zio.http.ChannelEvent.{Read, UserEvent, UserEventTriggered}
-import zio.stream.*
 
 object Main extends ZIOAppDefault:
 
