@@ -63,7 +63,7 @@ ws.send("potato")
 
 * Added the plug-in to sbt configuration
 
-* Now to start the 'backend`:
+* Now to start the `backend`:
 
   * on `sbt` run `backend/reStart` (or `~backend/reStart` to trigger restarting the app with changes)
 
@@ -89,7 +89,7 @@ ws.send("potato")
 
 * run `docker build -t code-to-screen-scala .` to build an image
 
-* `docker run --detach --publish 8000:8080 --name code-to-screen-1 code-to-screen-scala`
+* `docker run --detach --publish 8080:8080 --name code-to-screen-1 code-to-screen-scala`
 
 ### added deploy to fly.io
 

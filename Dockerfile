@@ -1,8 +1,8 @@
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:20-alpine
 
 WORKDIR /home/app
 
-COPY ./backend/target/scala-3.2.0/*standalone.jar ./code-to-screen.jar
+COPY ./backend/target/scala-3.3.0/*standalone.jar ./code-to-screen.jar
 
 EXPOSE 8080
 
